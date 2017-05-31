@@ -25,17 +25,18 @@ public class ChatController {
     @Autowired
     private ChatMessageRepository chatMessageRepository;
 
-    @RequestMapping(method = RequestMethod.POST)
-    public ChatMessage postMessage(@RequestBody ChatMessage chatMessage) {
+    @RequestMapping(path = "/{topicName}", method = RequestMethod.POST)
+    public ChatMessage postMessage(@PathVariable("topicName") String topicName, @RequestBody ChatMessage chatMessage) {
         chatMessage.setTimestamp(LocalDateTime.now().toString());
+        chatMessage.setTopic(topicName);
         chatMessageRepository.save(chatMessage);
-        template.convertAndSend("/topic/greetings", chatMessage);
-        log.info("Insert {}", chatMessage);
+        template.convertAndSend("/topic/" + topicName, chatMessage);
+        log.info("Insert to {} {}", topicName, chatMessage);
         return chatMessage;
     }
 
-    @RequestMapping(method = RequestMethod.GET)
-    public List<ChatMessage> getMessages() {
-        return chatMessageRepository.findAll();
+    @RequestMapping(path = "/{topicName}", method = RequestMethod.GET)
+    public List<ChatMessage> getMessages(@PathVariable("topicName") String topicName) {
+        return chatMessageRepository.findByTopic(topicName);
     }
 }

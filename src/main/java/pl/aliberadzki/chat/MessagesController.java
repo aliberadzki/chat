@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
  * Created by aliberadzki on 29.05.17.
  */
 @Controller
+@Deprecated
 public class MessagesController {
 
     protected final Logger log = LoggerFactory.getLogger(ChatController.class);
