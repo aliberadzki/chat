@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -35,6 +36,8 @@ public class ChatController {
         return chatMessage;
     }
 
+    @PreAuthorize("#oauth2.hasScope('read')")
+    @ResponseBody
     @RequestMapping(path = "/{topicName}", method = RequestMethod.GET)
     public List<ChatMessage> getMessages(@PathVariable("topicName") String topicName) {
         return chatMessageRepository.findByTopic(topicName);
